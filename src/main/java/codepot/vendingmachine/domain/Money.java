@@ -76,4 +76,12 @@ public class Money {
     public static BigDecimal round2(BigDecimal value) {
         return value.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
+
+    public Money substract(Money productPrice) {
+        return new Money(value.subtract(productPrice.value));
+    }
+
+    public boolean greaterOrEquals(Money money) {
+        return value.compareTo(money.value) > -1;
+    }
 }

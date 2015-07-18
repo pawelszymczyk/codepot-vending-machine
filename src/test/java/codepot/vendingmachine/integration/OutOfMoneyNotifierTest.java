@@ -34,7 +34,7 @@ public class OutOfMoneyNotifierTest {
     private Collection<OutOfMoneyNotifier> outOfMoneyNotifiers;
 
     @Test
-    public void shouldNotifyAllReceipentsAboutLackOfMoney() {
+    public void shouldNotifyAllRecipientsAboutLackOfMoney() {
         //given
         vendingMachine.insertCoin(Coin.QUARTER);
         vendingMachine.insertCoin(Coin.QUARTER);
@@ -57,18 +57,18 @@ public class OutOfMoneyNotifierTest {
     static class TestConfig {
 
         @Bean
-        OutOfMoneyNotifier outOfMoneyNotifier1() {
+        OutOfMoneyNotifier mockNotifier() {
             return mock(OutOfMoneyNotifier.class);
         }
 
         @Bean
-        OutOfMoneyNotifier outOfMoneyNotifier2() {
+        OutOfMoneyNotifier anotherMockNotifier() {
             return mock(OutOfMoneyNotifier.class);
         }
 
         @Bean
         CoinBank coinBank() {
-            return new DefaultCoinBank(Lists.newArrayList(outOfMoneyNotifier1(), outOfMoneyNotifier2()), coinBankCoins);
+            return new DefaultCoinBank(Lists.newArrayList(mockNotifier(), anotherMockNotifier()), coinBankCoins);
         }
     }
 }

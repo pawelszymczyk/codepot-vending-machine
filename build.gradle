@@ -7,7 +7,6 @@ repositories {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter:1.2.5.RELEASE'
     compile 'com.google.guava:guava:18.0'
-    compile 'org.slf4j:slf4j-api:1.7.7'
 
     testCompile 'org.assertj:assertj-core:3.1.0'
     testCompile 'org.springframework.boot:spring-boot-starter-test:1.2.5.RELEASE'

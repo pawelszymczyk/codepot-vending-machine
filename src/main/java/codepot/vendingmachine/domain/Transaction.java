@@ -11,7 +11,7 @@ public class Transaction {
     private Money value = Money.money(0);
 
     public void add(Coin coin) {
-        value.add(new Money(coin.getValue()));
+        value = value.add(new Money(coin.getValue()));
     }
 
     public Money getValue() {

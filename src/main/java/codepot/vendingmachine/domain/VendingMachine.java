@@ -1,6 +1,5 @@
 package codepot.vendingmachine.domain;
 
-import codepot.vendingmachine.infrastructure.DefaultCoinBank;
 import com.google.common.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,11 +17,11 @@ public class VendingMachine {
     private Optional<Transaction> currentTransaction = Optional.empty();
 
     private final TransactionManager transactionManager;
-    private final DefaultCoinBank coinBank;
+    private final CoinBank coinBank;
     private final ProductStorage productStorage;
 
     @Autowired
-    public VendingMachine(TransactionManager transactionManager, DefaultCoinBank coinBank, ProductStorage productStorage) {
+    public VendingMachine(TransactionManager transactionManager, CoinBank coinBank, ProductStorage productStorage) {
         this.transactionManager = transactionManager;
         this.coinBank = coinBank;
         this.productStorage = productStorage;
@@ -33,7 +32,10 @@ public class VendingMachine {
     }
 
     public void insertCoin(Coin coin) {
-        currentTransaction = Optional.of(currentTransaction.orElseGet(() -> transactionManager.getTransaction()));
+        if (!currentTransaction.isPresent()) {
+            currentTransaction = Optional.of(transactionManager.getTransaction());
+        }
+
         currentTransaction.get().add(coin);
     }
 

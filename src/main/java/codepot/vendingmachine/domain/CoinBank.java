@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public class CoinBank {
 
-    private final List<ServiceNotifier> notifiers;
+    private final ServiceNotifier notifier;
     private final List<Coin> coins = new ArrayList<>();
 
-    public CoinBank(List<ServiceNotifier> notifiers) {
-        this(notifiers,
+    public CoinBank(ServiceNotifier notifier) {
+        this(notifier,
                 Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY,
                 Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL,
                 Coin.DIME, Coin.DIME, Coin.DIME, Coin.DIME, Coin.DIME, Coin.DIME, Coin.DIME,
@@ -22,8 +22,8 @@ public class CoinBank {
         );
     }
 
-    public CoinBank(List<ServiceNotifier> notifiers, Coin... coins) {
-        this.notifiers = notifiers;
+    public CoinBank(ServiceNotifier notifier, Coin... coins) {
+        this.notifier = notifier;
         this.coins.addAll(Lists.newArrayList(coins));
     }
 
@@ -38,7 +38,7 @@ public class CoinBank {
         }
 
         if (coins.isEmpty()) {
-            notifiers.forEach(n -> n.doNotify());
+            notifier.doNotify();
         }
 
         return changeCoins;

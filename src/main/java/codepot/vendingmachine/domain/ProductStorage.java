@@ -32,12 +32,12 @@ public class ProductStorage {
         return true;
     }
 
-    public Product getProduct(String productCode) {
+    public DefaultProducts getProduct(String productCode) {
         return findProductByCode(productCode);
     }
 
-    private Product findProductByCode(String productCode) {
-        return Arrays.stream(Product.values()).filter(p -> p.getCode().equals(productCode))
+    private DefaultProducts findProductByCode(String productCode) {
+        return Arrays.stream(DefaultProducts.values()).filter(p -> p.getCode().equals(productCode))
                 .findAny()
                 .orElseThrow(() -> new ProductNotFoundException(productCode));
     }

@@ -24,12 +24,12 @@ public class DefaultConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CoinBank coinBank() {
-        return new CoinBank(notifiers);
+        return new CoinBank(serviceNotifier);
     }
 
     @Bean
     @ConditionalOnMissingBean
     public ProductStorage productStorage() {
-        return new ProductStorage(serviceNotifier);
+        return new ProductStorage(notifiers);
     }
 }

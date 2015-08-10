@@ -1,5 +1,6 @@
 package codepot.vendingmachine.domain;
 
+import codepot.vendingmachine.infrastructure.SpringTransactionFactory;
 import com.google.common.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,24 +17,24 @@ public class VendingMachine {
 
     private Optional<Transaction> currentTransaction = Optional.empty();
 
-    private final TransactionManager transactionManager;
+    private final SpringTransactionFactory transactionManager;
     private final CoinBank coinBank;
     private final ProductStorage productStorage;
 
     @Autowired
-    public VendingMachine(TransactionManager transactionManager, CoinBank coinBank, ProductStorage productStorage) {
+    public VendingMachine(SpringTransactionFactory transactionManager, CoinBank coinBank, ProductStorage productStorage) {
         this.transactionManager = transactionManager;
         this.coinBank = coinBank;
         this.productStorage = productStorage;
     }
 
     public String getDisplay() {
-        return "zonk";
+        return "Insert coin";
     }
 
     public void insertCoin(Coin coin) {
         if (!currentTransaction.isPresent()) {
-            currentTransaction = Optional.of(transactionManager.getTransaction());
+            currentTransaction = Optional.of(transactionManager.createTransaction());
         }
 
         currentTransaction.get().add(coin);

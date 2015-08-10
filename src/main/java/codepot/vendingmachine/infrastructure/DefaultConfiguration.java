@@ -2,8 +2,9 @@ package codepot.vendingmachine.infrastructure;
 
 import codepot.vendingmachine.domain.CoinBank;
 import codepot.vendingmachine.domain.ProductStorage;
-import codepot.vendingmachine.integration.OutOfMoneyNotifier;
+import codepot.vendingmachine.integration.ServiceNotifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,17 +15,21 @@ import java.util.List;
 public class DefaultConfiguration {
 
     @Autowired
-    List<OutOfMoneyNotifier> outOfMoneyNotifiers;
+    List<ServiceNotifier> notifiers;
+
+    @Autowired
+    @Qualifier("jiraNotifier")
+    ServiceNotifier serviceNotifier;
 
     @Bean
     @ConditionalOnMissingBean
     public CoinBank coinBank() {
-        return new DefaultCoinBank(outOfMoneyNotifiers);
+        return new CoinBank(notifiers);
     }
 
     @Bean
     @ConditionalOnMissingBean
     public ProductStorage productStorage() {
-        return new DefaultProductStorage();
+        return new ProductStorage(serviceNotifier);
     }
 }

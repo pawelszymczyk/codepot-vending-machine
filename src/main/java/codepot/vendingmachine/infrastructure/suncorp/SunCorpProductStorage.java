@@ -1,26 +1,40 @@
-package codepot.vendingmachine.infrastructure;
+package codepot.vendingmachine.infrastructure.suncorp;
 
 import codepot.vendingmachine.domain.Money;
 import codepot.vendingmachine.domain.Product;
 import codepot.vendingmachine.domain.ProductNotFoundException;
-import codepot.vendingmachine.domain.ProductStorage;
+import codepot.vendingmachine.integration.ServiceNotifier;
 
 import java.util.Arrays;
+import java.util.List;
 
-public class DefaultProductStorage implements ProductStorage {
+public class SunCorpProductStorage {
 
-    @Override
+    private final List<ServiceNotifier> serviceNotifiers;
+
+    public SunCorpProductStorage(List<ServiceNotifier> serviceNotifiers) {
+        this.serviceNotifiers = serviceNotifiers;
+    }
+
     public Money getProductPrice(String productCode) {
         return findProductByCode(productCode)
                 .getPrice();
     }
 
-    @Override
     public boolean isProductAvailable(String productCode) {
+        boolean isProductAvailable = isAviailable(productCode);
+
+        if (!isProductAvailable) {
+            serviceNotifiers.forEach(n -> n.doNotify());
+        }
+
+        return isProductAvailable;
+    }
+
+    private boolean isAviailable(String productCode) {
         return true;
     }
 
-    @Override
     public Product getProduct(String productCode) {
         return findProductByCode(productCode);
     }

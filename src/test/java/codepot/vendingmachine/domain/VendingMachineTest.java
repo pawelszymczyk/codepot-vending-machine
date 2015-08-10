@@ -16,13 +16,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class VendingMachineTest {
 
     @Autowired
-    private VendingMachine vendingMachine;
+    private VendingMachine vendingMachine; //try to provide this object in some other way then new VendingMachine(...);
+
+    @Test
+    public void shouldCreateVendingMachineWithClosedTransaction() {
+        //expect
+        assertThat(vendingMachine).isNotNull();
+        assertThat(vendingMachine.getCurrentTransaction()).isEmpty();
+    }
 
     @Test
     public void shouldCreateNewTransactionAfterInsertFirstCoin() {
-        //expect
-        assertThat(vendingMachine.getCurrentTransaction()).isEmpty();
-
         //when
         vendingMachine.insertCoin(Coin.DIME);
 
@@ -31,7 +35,7 @@ public class VendingMachineTest {
     }
 
     @Test
-    public void shouldContinueOpenedTransaction() {
+    public void shouldContinueAlreadyExistedTransaction() {
         //expect
         assertThat(vendingMachine.getCurrentTransaction()).isEmpty();
 

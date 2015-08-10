@@ -7,13 +7,12 @@ import org.junit.Test;
 
 public class Story3 {
 
-
     @Test
     public void shouldFullyIntegrateWithSunCorpProductStorage() {
         //given
         VendingMachine vendingMachine = null;
         /*
-            here integrate VendingMachine with SunCorpProductStorage, eg:
+            here integrate VendingMachine with SunCorpProductStorage, try to pick notifiers from container not create them by new eg:
 
             vendingMachine = new VendingMachine.Builder().withExternalProductStorage(
                     (JiraServiceNotifier jiraServiceNotifier, MailServiceNotifier mailServiceNotifier) -> {

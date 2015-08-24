@@ -56,8 +56,6 @@ public class Story1 {
 
         //then
         assertThat(vendingMachine.getCurrentTransaction()).isEmpty();
-        assertThat(vendingMachine.getCoinReturnTray().size()).isEqualTo(1);
-        assertThat(vendingMachine.getCoinReturnTray().contains(Coin.DIME));
     }
 
     @Test

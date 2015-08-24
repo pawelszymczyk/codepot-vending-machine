@@ -5,7 +5,7 @@ import codepot.vendingmachine.domain.Money;
 import codepot.vendingmachine.domain.ProductNotFoundException;
 import codepot.vendingmachine.infrastructure.notifiers.JiraServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.MailServiceNotifier;
-import codepot.vendingmachine.integration.ServiceNotifier;
+import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.base.Preconditions;
 
 import java.util.Arrays;

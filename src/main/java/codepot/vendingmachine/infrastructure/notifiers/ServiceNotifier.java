@@ -1,4 +1,4 @@
-package codepot.vendingmachine.integration;
+package codepot.vendingmachine.infrastructure.notifiers;
 
 public interface ServiceNotifier {
     void doNotify();

@@ -1,6 +1,5 @@
 package codepot.vendingmachine.infrastructure.notifiers;
 
-import codepot.vendingmachine.integration.ServiceNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

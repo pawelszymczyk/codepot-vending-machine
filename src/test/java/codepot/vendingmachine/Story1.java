@@ -31,21 +31,6 @@ public class Story1 {
     }
 
     @Test
-    public void shouldCreateNewTransactionEachTime() {
-        //given
-        vendingMachine.insertCoin(Coin.DIME);
-        Transaction firstTransaction = vendingMachine.getCurrentTransaction().get();
-        vendingMachine.cancel();
-
-        //when
-        vendingMachine.insertCoin(Coin.DIME);
-
-        //then
-        assertThat(firstTransaction).isNotEqualTo(vendingMachine.getCurrentTransaction().get());
-    }
-
-
-    @Test
     public void shouldContinueAlreadyExistedTransaction() {
         //expect
         assertThat(vendingMachine.getCurrentTransaction()).isEmpty();
@@ -88,6 +73,20 @@ public class Story1 {
 
         //then
         assertThat(vendingMachine.getCurrentTransaction()).isEmpty();
+    }
+
+    @Test
+    public void shouldCreateNewTransactionEachTime() {
+        //given
+        vendingMachine.insertCoin(Coin.DIME);
+        Transaction firstTransaction = vendingMachine.getCurrentTransaction().get();
+        vendingMachine.cancel();
+
+        //when
+        vendingMachine.insertCoin(Coin.DIME);
+
+        //then
+        assertThat(firstTransaction).isNotEqualTo(vendingMachine.getCurrentTransaction().get());
     }
 
     @Test

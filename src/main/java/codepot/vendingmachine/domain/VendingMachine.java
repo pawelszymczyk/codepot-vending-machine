@@ -64,7 +64,7 @@ public class VendingMachine {
     }
 
     public Set<Product> getProductsTray() {
-        return null;
+        return productsTray;
     }
 
 

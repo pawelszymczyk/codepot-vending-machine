@@ -1,8 +1,33 @@
 package codepot.vendingmachine.domain;
 
-import java.util.Arrays;
+import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ProductStorage {
+
+    private final List<ServiceNotifier> serviceNotifiers;
+
+    private Map<String, Product> productsStorage = new HashMap<>();
+    private Map<String, Integer> productsQuantity = new HashMap<>();
+
+    @Inject
+    public ProductStorage(List<ServiceNotifier> serviceNotifiers) {
+        this(serviceNotifiers,
+                Lists.newArrayList(DefaultProducts.CANDY, DefaultProducts.CHIPS, DefaultProducts.COLA));
+    }
+
+    public ProductStorage(List<ServiceNotifier> serviceNotifiers, List<Product> products) {
+        this.serviceNotifiers = serviceNotifiers;
+        products.stream().forEach((p) -> {
+            productsQuantity.put(p.getCode(), productsQuantity.getOrDefault(p.getCode(), 0) + 1);
+            productsStorage.put(p.getCode(), p);
+        });
+    }
 
     public Money getProductPrice(String productCode) {
         return findProductByCode(productCode)
@@ -10,22 +35,33 @@ public class ProductStorage {
     }
 
     public boolean isProductAvailable(String productCode) {
-        boolean isProductAvailable = isAviailable(productCode);
+        return isAviailable(productCode);
 
-        return isProductAvailable;
     }
 
     private boolean isAviailable(String productCode) {
-        return true;
+        return productsQuantity.get(productCode) > 0;
     }
 
-    public DefaultProducts getProduct(String productCode) {
-        return findProductByCode(productCode);
+    public Product getProduct(String productCode) {
+        if (!isProductAvailable(productCode)) {
+            throw new NoMoreProductsException(productCode);
+        }
+
+        Product product = findProductByCode(productCode);
+        productsQuantity.put(productCode, productsQuantity.get(productCode) - 1);
+
+
+        if (!isProductAvailable(productCode)) {
+            serviceNotifiers.forEach(n -> n.doNotify());
+        }
+
+        return product;
     }
 
-    private DefaultProducts findProductByCode(String productCode) {
-        return Arrays.stream(DefaultProducts.values()).filter(p -> p.getCode().equals(productCode))
-                .findAny()
-                .orElseThrow(() -> new ProductNotFoundException(productCode));
+    private Product findProductByCode(String productCode) {
+        if (!productsStorage.containsKey(productCode)) throw new ProductNotFoundException(productCode);
+
+        return productsStorage.get(productCode);
     }
 }

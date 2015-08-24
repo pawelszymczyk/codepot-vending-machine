@@ -23,7 +23,6 @@ public class Story1 {
         Injector injector = Guice.createInjector(new VendingMachineModule());
 
         vendingMachine = injector.getInstance(VendingMachine.class);
-
     }
 
     @Test

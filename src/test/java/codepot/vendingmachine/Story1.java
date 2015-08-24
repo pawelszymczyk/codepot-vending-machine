@@ -98,18 +98,4 @@ public class Story1 {
         //then
         assertThat(firstTransaction).isNotEqualTo(vendingMachine.getCurrentTransaction().get());
     }
-
-    @Test
-    public void shouldNotEndTransactionAfterSelectProductWithoutEnoughMoney() {
-        //given
-        DefaultProducts chips = DefaultProducts.CHIPS;
-
-        vendingMachine.insertCoin(Coin.QUARTER);
-
-        //when
-        vendingMachine.selectProduct(chips.getCode());
-
-        //then
-        assertThat(vendingMachine.getCurrentTransaction()).isPresent();
-    }
 }

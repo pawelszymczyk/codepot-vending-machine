@@ -2,6 +2,8 @@ package codepot.vendingmachine.infrastructure;
 
 
 import codepot.vendingmachine.domain.VendingMachine;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 public class Application {
 
@@ -11,6 +13,8 @@ public class Application {
     }
 
     private static VendingMachine createVendingMachine() {
-        return null;
+        Injector injector = Guice.createInjector(new VendingMachineModule());
+
+        return injector.getInstance(VendingMachine.class);
     }
 }

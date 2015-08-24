@@ -4,6 +4,10 @@ import codepot.vendingmachine.domain.Coin;
 import codepot.vendingmachine.domain.DefaultProducts;
 import codepot.vendingmachine.domain.Transaction;
 import codepot.vendingmachine.domain.VendingMachine;
+import codepot.vendingmachine.infrastructure.VendingMachineModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -13,6 +17,14 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 public class Story1 {
 
     VendingMachine vendingMachine; //try to provide this object in some other way than new VendingMachine(...);
+
+    @Before
+    public void setUp() throws Exception {
+        Injector injector = Guice.createInjector(new VendingMachineModule());
+
+        vendingMachine = injector.getInstance(VendingMachine.class);
+
+    }
 
     @Test
     public void shouldCreateVendingMachineWithClosedTransaction() {
@@ -56,8 +68,6 @@ public class Story1 {
 
         //then
         assertThat(vendingMachine.getCurrentTransaction()).isEmpty();
-        assertThat(vendingMachine.getCoinReturnTray().size()).isEqualTo(1);
-        assertThat(vendingMachine.getCoinReturnTray().contains(Coin.DIME));
     }
 
     @Test

@@ -6,7 +6,12 @@ repositories {
 
 dependencies {
     compile 'com.google.guava:guava:18.0'
-    compile 'org.slf4j:slf4j-api:1.7.7'
 
-    testCompile "junit:junit:4.11"
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+    compile group: 'ch.qos.logback', name: 'logback-core', version: '1.1.2'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.2'
+
+    testCompile 'org.assertj:assertj-core:3.1.0'
+    testCompile 'org.springframework.boot:spring-boot-starter-test:1.2.5.RELEASE'
+    testCompile 'junit:junit:4.11'
 }

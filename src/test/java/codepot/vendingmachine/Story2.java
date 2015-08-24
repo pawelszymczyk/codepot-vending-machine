@@ -2,14 +2,15 @@ package codepot.vendingmachine;
 
 import codepot.vendingmachine.domain.Coin;
 import codepot.vendingmachine.domain.DefaultProducts;
+import codepot.vendingmachine.domain.Product;
 import codepot.vendingmachine.domain.VendingMachine;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.junit.Test;
 
 import java.util.Collection;
 
+import static org.assertj.core.api.StrictAssertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -23,21 +24,33 @@ public class Story2 {
     private VendingMachine vendingMachine; //create vendingMachine with mock notifiers
 
     @Test
-    public void shouldNotifyRecipientAboutLackOfMoney() {
+    public void shouldPutSelectedProductOnTray() {
         //given
-        vendingMachine.insertCoin(Coin.QUARTER);
-        vendingMachine.insertCoin(Coin.QUARTER);
+        Product chips = DefaultProducts.CHIPS;
+
         vendingMachine.insertCoin(Coin.QUARTER);
         vendingMachine.insertCoin(Coin.QUARTER);
 
         //when
-        vendingMachine.selectProduct("A3");
-
-        //then all money from coins bank is on return tray
-        vendingMachine.getCoinReturnTray().equals(Sets.newHashSet(coinBankCoins));
+        vendingMachine.selectProduct(chips.getCode());
 
         //then
-        verify(outOfMoneyNotifier).doNotify();
+        assertThat(vendingMachine.getProductsTray().size()).isEqualTo(1);
+        assertThat(vendingMachine.getProductsTray().iterator().next().getCode()).isEqualTo(chips.getCode());
+    }
+
+    @Test
+    public void shouldNotPutSelectedProductOnTrayWhenNotEnoughMoney() {
+        //given
+        DefaultProducts chips = DefaultProducts.CHIPS;
+
+        vendingMachine.insertCoin(Coin.QUARTER);
+
+        //when
+        vendingMachine.selectProduct(chips.getCode());
+
+        //then
+        assertThat(vendingMachine.getProductsTray().isEmpty()).isTrue();
     }
 
     @Test

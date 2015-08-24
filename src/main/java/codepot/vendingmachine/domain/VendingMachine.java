@@ -30,6 +30,11 @@ public class VendingMachine {
         return null;
     }
 
+    public Set<Product> getProductsTray() {
+        return null;
+    }
+
+
     @VisibleForTesting
     public Optional<Transaction> getCurrentTransaction() {
         return null;

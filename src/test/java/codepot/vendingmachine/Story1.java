@@ -12,7 +12,7 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 
 public class Story1 {
 
-    VendingMachine vendingMachine; //try to provide this object in some other way then new VendingMachine(...);
+    VendingMachine vendingMachine; //try to provide this object in some other way than new VendingMachine(...);
 
     @Test
     public void shouldCreateVendingMachineWithClosedTransaction() {

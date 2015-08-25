@@ -12,6 +12,7 @@ import org.picocontainer.PicoContainer;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 public class VendingMachine {
 
@@ -81,6 +82,7 @@ public class VendingMachine {
     public static class Builder {
 
         private MutablePicoContainer pico;
+        private Function<ProductStorageNotifiers, ProductStorage> productStorage;
 
         public Builder() {
             this(Optional.empty());
@@ -95,7 +97,7 @@ public class VendingMachine {
             pico.as(Characteristics.CACHE).addComponent(ProductStorageNotifiers.class);
 
             if (pico.getComponent(ProductStorage.class) == null) {
-                pico.as(Characteristics.CACHE).addComponent(ProductStorage.class, ProductStorage.class);
+                pico.as(Characteristics.CACHE).addComponent(ProductStorage.class, DefaultProductStorage.class);
             }
 
             if (pico.getComponent(CoinBank.class) == null) {
@@ -106,7 +108,11 @@ public class VendingMachine {
             pico.as(Characteristics.CACHE).addComponent(VendingMachine.class);
         }
 
-
+        public Builder withExternalProductStorage(Function<ProductStorageNotifiers, ProductStorage> productStorage) {
+            pico.removeComponent(ProductStorage.class);
+            pico.addComponent(productStorage.apply(pico.getComponent(ProductStorageNotifiers.class)));
+            return this;
+        }
 
         public VendingMachine build() {
             return pico.getComponent(VendingMachine.class);

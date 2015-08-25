@@ -1,11 +1,17 @@
 package codepot.vendingmachine.domain;
 
+import codepot.vendingmachine.infrastructure.VendingMachineModule;
+import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.inject.Guice;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 public class VendingMachine {
 
@@ -71,5 +77,28 @@ public class VendingMachine {
     @VisibleForTesting
     public Optional<Transaction> getCurrentTransaction() {
         return currentTransaction;
+    }
+
+    public static class Builder {
+
+        private Function<List<ServiceNotifier>, ProductStorage> productStorage;
+
+        public Builder() {
+        }
+
+        public Builder withExternalProductStorage(Function<List<ServiceNotifier>, ProductStorage> productStorage) {
+            this.productStorage = productStorage;
+            return this;
+        }
+
+        public VendingMachine build() {
+            VendingMachineModule module = productStorage != null ? new VendingMachineModule(productStorage) : new VendingMachineModule();
+
+            Injector injector = Guice.createInjector(module);
+
+
+            return injector.getInstance(VendingMachine.class);
+
+        }
     }
 }

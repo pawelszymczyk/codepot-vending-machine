@@ -15,8 +15,8 @@ public class Story4 {
             here integrate VendingMachine with SunCorpProductStorage, try to pick notifiers from container not create them by new eg:
 
             vendingMachine = new VendingMachine.Builder().withExternalProductStorage(
-                    (JiraServiceNotifier jiraServiceNotifier, MailServiceNotifier mailServiceNotifier) -> {
-                        new SunCorpProductStorage(Lists.newArrayList(jiraServiceNotifier, mailServiceNotifier));
+                    (List<ServiceNotifier> notifiers) -> {
+                        new SunCorpProductStorage(notifiers);
                     }
             ).build();
         */

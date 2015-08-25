@@ -35,7 +35,7 @@ public class Story3 {
                     .map(c -> c.getValue())
                     .reduce((v1, v2) -> v1.add(v2))
                     .get())
-                .isEqualTo(BigDecimal.valueOf(0.10));
+                .isEqualTo(new BigDecimal(0.10).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     @Test

@@ -5,6 +5,8 @@ import codepot.vendingmachine.domain.GuiceTransactionFactory;
 import codepot.vendingmachine.domain.ProductStorage;
 import codepot.vendingmachine.domain.TransactionFactory;
 import codepot.vendingmachine.domain.VendingMachine;
+import codepot.vendingmachine.infrastructure.log.KeyLogger;
+import codepot.vendingmachine.infrastructure.log.KeyLoggerInterceptor;
 import codepot.vendingmachine.infrastructure.notifiers.JiraServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.SmsServiceNotifier;
@@ -12,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.matcher.Matchers;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +41,7 @@ public class VendingMachineModule extends AbstractModule {
 
         bind(TransactionFactory.class).to(GuiceTransactionFactory.class).in(Singleton.class);
         bind(VendingMachine.class).in(Singleton.class);
-
+        bindInterceptor(Matchers.any(), Matchers.annotatedWith(KeyLogger.class), new KeyLoggerInterceptor());
     }
 
     @Provides

@@ -1,5 +1,6 @@
 package codepot.vendingmachine.domain;
 
+import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.collect.Lists;
 
 import java.util.HashMap;
@@ -8,15 +9,17 @@ import java.util.Map;
 
 public class ProductStorage {
 
+    private final List<ServiceNotifier> serviceNotifiers;
     private Map<String, Product> productsStorage = new HashMap<>();
     private Map<String, Integer> productsQuantity = new HashMap<>();
 
-    public ProductStorage() {
-        this(
+    public ProductStorage(List<ServiceNotifier> serviceNotifiers) {
+        this(serviceNotifiers,
                 Lists.newArrayList(DefaultProducts.CANDY, DefaultProducts.CHIPS, DefaultProducts.COLA));
     }
 
-    public ProductStorage(List<Product> products) {
+    private ProductStorage(List<ServiceNotifier> serviceNotifiers, List<Product> products) {
+        this.serviceNotifiers = serviceNotifiers;
         products.stream().forEach((p) -> {
             productsQuantity.put(p.getCode(), productsQuantity.getOrDefault(p.getCode(), 0) + 1);
             productsStorage.put(p.getCode(), p);
@@ -44,6 +47,10 @@ public class ProductStorage {
 
         Product product = findProductByCode(productCode);
         productsQuantity.put(productCode, productsQuantity.get(productCode) - 1);
+
+        if (productsQuantity.get(productCode) < 1) {
+            serviceNotifiers.forEach(n -> n.doNotify());
+        }
 
         return product;
     }

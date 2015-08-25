@@ -6,9 +6,14 @@ import codepot.vendingmachine.domain.Product;
 import codepot.vendingmachine.domain.VendingMachine;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.collect.Lists;
+import org.junit.Before;
 import org.junit.Test;
+import org.picocontainer.Characteristics;
+import org.picocontainer.DefaultPicoContainer;
+import org.picocontainer.MutablePicoContainer;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import static org.assertj.core.api.StrictAssertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -21,6 +26,15 @@ public class Story2 {
     private Collection<ServiceNotifier> outOfProductNotifiers = Lists.newArrayList(mock(ServiceNotifier.class), mock(ServiceNotifier.class));
 
     private VendingMachine vendingMachine; //create vendingMachine with mock notifiers
+
+    @Before
+    public void setUp() throws Exception {
+        MutablePicoContainer pico = new DefaultPicoContainer();
+
+        pico.as(Characteristics.CACHE).addComponent(outOfProductNotifiers);
+
+        vendingMachine = new VendingMachine.Builder(Optional.of(pico)).build();
+    }
 
     @Test
     public void shouldPutSelectedProductOnTray() {

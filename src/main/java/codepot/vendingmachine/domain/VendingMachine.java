@@ -4,25 +4,45 @@ import com.google.common.annotations.VisibleForTesting;
 import org.picocontainer.Characteristics;
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.PicoContainer;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 public class VendingMachine {
 
+    private final Set<Product> productsTray = new HashSet<>();
+    private final Set<Coin> coinReturnTray = new HashSet<>();
+
     private final TransactionFactory transactionFactory;
+    private final CoinBank coinBank;
+    private final ProductStorage productStorage;
     private Optional<Transaction> currentTransaction = Optional.empty();
 
-    public VendingMachine(TransactionFactory transactionFactory) {
+    public VendingMachine(TransactionFactory transactionFactory, CoinBank coinBank, ProductStorage productStorage) {
         this.transactionFactory = transactionFactory;
+        this.coinBank = coinBank;
+        this.productStorage = productStorage;
     }
 
     public String getDisplay() {
         return "INSERT A COIN";
     }
 
+
     public void selectProduct(String productCode) {
-        currentTransaction = Optional.empty();
+        currentTransaction.ifPresent(t -> {
+                    Money productPrice = productStorage.getProductPrice(productCode);
+
+                    if (t.getValue().greaterOrEquals(productPrice) && productStorage.isProductAvailable(productCode)) {
+                        t.reduce(productPrice);
+                        productsTray.add(productStorage.getProduct(productCode));
+                        coinReturnTray.addAll(coinBank.change(t));
+                        currentTransaction = Optional.empty();
+                    }
+                }
+        );
     }
 
     public void insertCoin(Coin coin) {
@@ -38,11 +58,11 @@ public class VendingMachine {
     }
 
     public Set<Coin> getCoinReturnTray() {
-        return null;
+        return coinReturnTray;
     }
 
     public Set<Product> getProductsTray() {
-        return null;
+        return productsTray;
     }
 
 
@@ -53,15 +73,22 @@ public class VendingMachine {
 
     public static class Builder {
 
-        private MutablePicoContainer pico = new DefaultPicoContainer();
+        private MutablePicoContainer pico;
 
         public Builder() {
+            this(Optional.empty());
+        }
+
+        public Builder(Optional<PicoContainer> picoContainer) {
+            pico = picoContainer.isPresent() ? new DefaultPicoContainer(picoContainer.get()) : new DefaultPicoContainer();
+
             pico.as(Characteristics.CACHE).addComponent(ProductStorage.class);
             pico.as(Characteristics.CACHE).addComponent(CoinBank.class);
             pico.addComponent(TransactionFactory.class, new PicoContainerTransactionFactory(pico));
             pico.as(Characteristics.CACHE).addComponent(VendingMachine.class);
-
         }
+
+
 
         public VendingMachine build() {
             return pico.getComponent(VendingMachine.class);

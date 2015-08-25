@@ -1,13 +1,15 @@
-package codepot.vendingmachine;
+package codepot.vendingmachine.domain;
 
-import codepot.vendingmachine.domain.Coin;
-import codepot.vendingmachine.domain.VendingMachine;
-import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
+import codepot.vendingmachine.infrastructure.notifiers.SmsServiceNotifier;
 import com.google.common.collect.Sets;
+import org.junit.Before;
 import org.junit.Test;
-
+import org.picocontainer.Characteristics;
+import org.picocontainer.DefaultPicoContainer;
+import org.picocontainer.MutablePicoContainer;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -17,9 +19,19 @@ public class Story3 {
 
     private static final Coin[] coinBankCoins = new Coin[]{Coin.NICKEL, Coin.NICKEL, Coin.NICKEL};
 
-    private ServiceNotifier outOfMoneyNotifier = mock(ServiceNotifier.class);
+    private SmsServiceNotifier outOfMoneyNotifier = mock(SmsServiceNotifier.class);
 
     private VendingMachine vendingMachine; //create vendingMachine with mock notifiers
+
+    @Before
+    public void setUp() throws Exception {
+        MutablePicoContainer pico = new DefaultPicoContainer();
+
+        pico.as(Characteristics.CACHE).addComponent(outOfMoneyNotifier);
+
+        vendingMachine = new VendingMachine.Builder(Optional.of(pico)).build();
+    }
+
 
     @Test
     public void shouldReturnChange() {
@@ -57,6 +69,12 @@ public class Story3 {
     @Test
     public void shouldNotifyRecipientAboutLackOfMoney() {
         //given
+        MutablePicoContainer pico = new DefaultPicoContainer();
+
+        pico.as(Characteristics.CACHE).addComponent(CoinBank.class, new CoinBank(outOfMoneyNotifier, coinBankCoins));
+
+        VendingMachine vendingMachine = new VendingMachine.Builder(Optional.of(pico)).build();
+
         vendingMachine.insertCoin(Coin.QUARTER);
         vendingMachine.insertCoin(Coin.QUARTER);
         vendingMachine.insertCoin(Coin.QUARTER);

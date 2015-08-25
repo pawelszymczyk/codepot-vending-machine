@@ -1,5 +1,7 @@
 package codepot.vendingmachine.domain;
 
+import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
+import codepot.vendingmachine.infrastructure.notifiers.SmsServiceNotifier;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -10,9 +12,10 @@ import java.util.Optional;
 public class CoinBank {
 
     private final List<Coin> coins = new ArrayList<>();
+    private final ServiceNotifier serviceNotifier;
 
-    public CoinBank() {
-        this(
+    public CoinBank(SmsServiceNotifier serviceNotifier) {
+        this(serviceNotifier,
                 Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY,
                 Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL,
                 Coin.DIME, Coin.DIME, Coin.DIME, Coin.DIME, Coin.DIME, Coin.DIME, Coin.DIME,
@@ -20,7 +23,8 @@ public class CoinBank {
         );
     }
 
-    public CoinBank(Coin... coins) {
+    CoinBank(SmsServiceNotifier serviceNotifier, Coin... coins) {
+        this.serviceNotifier = serviceNotifier;
         this.coins.addAll(Lists.newArrayList(coins));
     }
 
@@ -32,6 +36,10 @@ public class CoinBank {
                 transaction.reduce(c.getMoney());
                 changeCoins.add(c);
             });
+        }
+
+        if (coins.isEmpty()) {
+            serviceNotifier.doNotify();
         }
 
         return changeCoins;

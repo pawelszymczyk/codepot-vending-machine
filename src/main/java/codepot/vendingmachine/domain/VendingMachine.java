@@ -1,5 +1,8 @@
 package codepot.vendingmachine.domain;
 
+import codepot.vendingmachine.infrastructure.notifiers.JiraServiceNotifier;
+import codepot.vendingmachine.infrastructure.notifiers.MailServiceNotifier;
+import codepot.vendingmachine.infrastructure.notifiers.SmsServiceNotifier;
 import com.google.common.annotations.VisibleForTesting;
 import org.picocontainer.Characteristics;
 import org.picocontainer.DefaultPicoContainer;
@@ -54,6 +57,10 @@ public class VendingMachine {
     }
 
     public void cancel() {
+        currentTransaction.ifPresent(t -> {
+            coinReturnTray.addAll(coinBank.change(t));
+        });
+
         currentTransaction = Optional.empty();
     }
 
@@ -82,8 +89,19 @@ public class VendingMachine {
         public Builder(Optional<PicoContainer> picoContainer) {
             pico = picoContainer.isPresent() ? new DefaultPicoContainer(picoContainer.get()) : new DefaultPicoContainer();
 
-            pico.as(Characteristics.CACHE).addComponent(ProductStorage.class);
-            pico.as(Characteristics.CACHE).addComponent(CoinBank.class);
+            pico.as(Characteristics.CACHE).addComponent(JiraServiceNotifier.class, JiraServiceNotifier.class);
+            pico.as(Characteristics.CACHE).addComponent(SmsServiceNotifier.class, SmsServiceNotifier.class);
+            pico.as(Characteristics.CACHE).addComponent(MailServiceNotifier.class, MailServiceNotifier.class);
+            pico.as(Characteristics.CACHE).addComponent(ProductStorageNotifiers.class);
+
+            if (pico.getComponent(ProductStorage.class) == null) {
+                pico.as(Characteristics.CACHE).addComponent(ProductStorage.class, ProductStorage.class);
+            }
+
+            if (pico.getComponent(CoinBank.class) == null) {
+                pico.as(Characteristics.CACHE).addComponent(CoinBank.class);
+            }
+
             pico.addComponent(TransactionFactory.class, new PicoContainerTransactionFactory(pico));
             pico.as(Characteristics.CACHE).addComponent(VendingMachine.class);
         }

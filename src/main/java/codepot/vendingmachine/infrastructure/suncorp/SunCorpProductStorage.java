@@ -1,7 +1,7 @@
 package codepot.vendingmachine.infrastructure.suncorp;
 
-import codepot.vendingmachine.domain.DefaultProducts;
 import codepot.vendingmachine.domain.Money;
+import codepot.vendingmachine.domain.Product;
 import codepot.vendingmachine.domain.ProductNotFoundException;
 import codepot.vendingmachine.domain.ProductStorage;
 import codepot.vendingmachine.infrastructure.notifiers.JiraServiceNotifier;
@@ -43,12 +43,12 @@ public class SunCorpProductStorage implements ProductStorage {
         return true;
     }
 
-    public DefaultProducts getProduct(String productCode) {
+    public Product getProduct(String productCode) {
         return findProductByCode(productCode);
     }
 
-    private DefaultProducts findProductByCode(String productCode) {
-        return Arrays.stream(DefaultProducts.values()).filter(p -> p.getCode().equals(productCode))
+    private Product findProductByCode(String productCode) {
+        return Arrays.stream(SunCorpProducts.values()).filter(p -> p.getCode().equals(productCode))
                 .findAny()
                 .orElseThrow(() -> new ProductNotFoundException(productCode));
     }

@@ -56,6 +56,8 @@ public class VendingMachine {
         private MutablePicoContainer pico = new DefaultPicoContainer();
 
         public Builder() {
+            pico.as(Characteristics.CACHE).addComponent(ProductStorage.class);
+            pico.as(Characteristics.CACHE).addComponent(CoinBank.class);
             pico.addComponent(TransactionFactory.class, new PicoContainerTransactionFactory(pico));
             pico.as(Characteristics.CACHE).addComponent(VendingMachine.class);
 

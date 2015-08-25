@@ -1,5 +1,6 @@
 package codepot.vendingmachine.domain;
 
+import org.picocontainer.Characteristics;
 import org.picocontainer.MutablePicoContainer;
 
 public class PicoContainerTransactionFactory implements TransactionFactory {
@@ -8,7 +9,7 @@ public class PicoContainerTransactionFactory implements TransactionFactory {
 
     public PicoContainerTransactionFactory(MutablePicoContainer pico) {
         this.pico = pico;
-        pico.addComponent(Transaction.class);
+        pico.as(Characteristics.NO_CACHE).addComponent(Transaction.class);
     }
 
     @Override

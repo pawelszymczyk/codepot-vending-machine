@@ -5,7 +5,6 @@ import codepot.vendingmachine.infrastructure.notifiers.JiraServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.MailServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.SmsServiceNotifier;
 import com.google.common.annotations.VisibleForTesting;
-import org.picocontainer.Characteristics;
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
@@ -92,21 +91,21 @@ public class VendingMachine {
         public Builder(Optional<PicoContainer> picoContainer) {
             pico = picoContainer.isPresent() ? new DefaultPicoContainer(new LoggingAwareByDefault(), picoContainer.get()) : new DefaultPicoContainer(new LoggingAwareByDefault());
 
-            pico.as(Characteristics.CACHE).addComponent(JiraServiceNotifier.class, JiraServiceNotifier.class);
-            pico.as(Characteristics.CACHE).addComponent(SmsServiceNotifier.class, SmsServiceNotifier.class);
-            pico.as(Characteristics.CACHE).addComponent(MailServiceNotifier.class, MailServiceNotifier.class);
-            pico.as(Characteristics.CACHE).addComponent(ProductStorageNotifiers.class);
+            pico.addComponent(JiraServiceNotifier.class, JiraServiceNotifier.class);
+            pico.addComponent(SmsServiceNotifier.class, SmsServiceNotifier.class);
+            pico.addComponent(MailServiceNotifier.class, MailServiceNotifier.class);
+            pico.addComponent(ProductStorageNotifiers.class);
 
             if (pico.getComponent(ProductStorage.class) == null) {
-                pico.as(Characteristics.CACHE).addComponent(ProductStorage.class, DefaultProductStorage.class);
+                pico.addComponent(ProductStorage.class, DefaultProductStorage.class);
             }
 
             if (pico.getComponent(CoinBank.class) == null) {
-                pico.as(Characteristics.CACHE).addComponent(CoinBank.class);
+                pico.addComponent(CoinBank.class);
             }
 
             pico.addComponent(TransactionFactory.class, new PicoContainerTransactionFactory(pico));
-            pico.as(Characteristics.CACHE).addComponent(VendingMachine.class);
+            pico.addComponent(VendingMachine.class);
         }
 
         public Builder withExternalProductStorage(Function<ProductStorageNotifiers, ProductStorage> productStorage) {

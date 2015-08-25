@@ -22,8 +22,8 @@ public class LoggingAware<T> extends HiddenImplementation {
 
         logger.debug("Execute method: " + method.toString() + " args: " + Arrays.toString(args));
 
-            Object object = method.invoke(componentInstance, args);
-            return object;
+        Object object = method.invoke(componentInstance, args);
+        return object;
 
     }
 }

@@ -7,10 +7,12 @@ import codepot.vendingmachine.domain.VendingMachine;
 import codepot.vendingmachine.infrastructure.VendingMachineModule;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.collect.Lists;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.util.Modules;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,10 +30,10 @@ public class Story2 {
 
     private VendingMachine vendingMachine; //create vendingMachine with mock notifiers
 
-    static class TestVendingMachineModule extends VendingMachineModule {
+    static class TestVendingMachineModule extends AbstractModule {
         @Override
         protected void configure() {
-            super.configure();
+
         }
 
         @Provides
@@ -43,7 +45,7 @@ public class Story2 {
 
     @Before
     public void setUp() throws Exception {
-        Injector injector = Guice.createInjector(new TestVendingMachineModule());
+        Injector injector = Guice.createInjector(Modules.override(new VendingMachineModule()).with(new TestVendingMachineModule()));
 
         vendingMachine = injector.getInstance(VendingMachine.class);
     }

@@ -21,8 +21,6 @@ import static org.mockito.Mockito.verify;
 
 public class Story2 {
 
-    private static final Coin[] coinBankCoins = new Coin[]{Coin.NICKEL, Coin.NICKEL, Coin.NICKEL};
-
     private Collection<ServiceNotifier> outOfProductNotifiers = Lists.newArrayList(mock(ServiceNotifier.class), mock(ServiceNotifier.class));
 
     private VendingMachine vendingMachine; //create vendingMachine with mock notifiers

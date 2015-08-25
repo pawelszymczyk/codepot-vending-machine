@@ -1,5 +1,6 @@
 package codepot.vendingmachine.domain;
 
+import codepot.vendingmachine.infrastructure.LoggingAwareByDefault;
 import codepot.vendingmachine.infrastructure.notifiers.JiraServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.MailServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.SmsServiceNotifier;
@@ -89,7 +90,7 @@ public class VendingMachine {
         }
 
         public Builder(Optional<PicoContainer> picoContainer) {
-            pico = picoContainer.isPresent() ? new DefaultPicoContainer(picoContainer.get()) : new DefaultPicoContainer();
+            pico = picoContainer.isPresent() ? new DefaultPicoContainer(new LoggingAwareByDefault(), picoContainer.get()) : new DefaultPicoContainer(new LoggingAwareByDefault());
 
             pico.as(Characteristics.CACHE).addComponent(JiraServiceNotifier.class, JiraServiceNotifier.class);
             pico.as(Characteristics.CACHE).addComponent(SmsServiceNotifier.class, SmsServiceNotifier.class);

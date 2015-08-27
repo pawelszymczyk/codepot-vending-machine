@@ -6,9 +6,12 @@ import codepot.vendingmachine.domain.Product;
 import codepot.vendingmachine.domain.VendingMachine;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.collect.Lists;
+import org.glassfish.hk2.api.TypeLiteral;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.List;
 
 import static org.assertj.core.api.StrictAssertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -18,7 +21,14 @@ public class Story2 {
 
     private Collection<ServiceNotifier> outOfProductNotifiers = Lists.newArrayList(mock(ServiceNotifier.class), mock(ServiceNotifier.class));
 
-    private VendingMachine vendingMachine; //create vendingMachine with mock notifiers
+    private VendingMachine vendingMachine;
+
+    @Before
+    public void setUp() throws Exception {
+        vendingMachine = new VendingMachine.Builder()
+                .withSingletonBinding(outOfProductNotifiers, new TypeLiteral<List<ServiceNotifier>>(){})
+                .build();
+    }
 
     @Test
     public void shouldPutSelectedProductOnTray() {

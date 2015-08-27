@@ -4,6 +4,7 @@ import codepot.vendingmachine.domain.Coin;
 import codepot.vendingmachine.domain.DefaultProducts;
 import codepot.vendingmachine.domain.Transaction;
 import codepot.vendingmachine.domain.VendingMachine;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -13,6 +14,11 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 public class Story1 {
 
     VendingMachine vendingMachine; //try to provide this object in some other way than new VendingMachine(...);
+
+    @Before
+    public void setUp() throws Exception {
+        vendingMachine = new VendingMachine.Builder().build();
+    }
 
     @Test
     public void shouldCreateVendingMachineWithClosedTransaction() {

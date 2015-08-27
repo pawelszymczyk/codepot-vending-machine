@@ -11,6 +11,8 @@ public class Application {
     }
 
     private static VendingMachine createVendingMachine() {
-        return null;
+        VendingMachine vendingMachine = new VendingMachine.Builder().build();
+
+        return vendingMachine;
     }
 }

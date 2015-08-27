@@ -5,6 +5,8 @@ repositories {
 }
 
 dependencies {
+    compile 'org.glassfish.hk2:hk2:2.3.0'
+
     compile 'com.google.guava:guava:18.0'
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'

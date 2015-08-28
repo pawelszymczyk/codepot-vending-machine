@@ -8,6 +8,7 @@ import codepot.vendingmachine.domain.VendingMachine;
 import codepot.vendingmachine.infrastructure.notifiers.JiraServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.MailServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
+import codepot.vendingmachine.infrastructure.notifiers.SmsServiceNotifier;
 import com.google.common.collect.Lists;
 import dagger.Module;
 import dagger.Provides;
@@ -47,12 +48,12 @@ public class VendingMachineModule {
         return new MailServiceNotifier();
     }
 
-//    @Provides
-//    @Singleton
-//    @Named("smsServiceNotifier")
-//    ServiceNotifier smsServiceNotifier() {
-//        return new SmsServiceNotifier();
-//    }
+    @Provides
+    @Singleton
+    @Named("smsServiceNotifier")
+    ServiceNotifier smsServiceNotifier() {
+        return new SmsServiceNotifier();
+    }
 
     @Provides
     @Singleton
@@ -69,8 +70,8 @@ public class VendingMachineModule {
 
     @Provides
     @Singleton
-    CoinBank coinBank() {
-        return new CoinBank();
+    CoinBank coinBank(@Named("smsServiceNotifier") ServiceNotifier serviceNotifier) {
+        return new CoinBank(serviceNotifier);
     }
 
     @Provides

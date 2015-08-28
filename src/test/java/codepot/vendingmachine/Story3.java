@@ -1,12 +1,17 @@
 package codepot.vendingmachine;
 
 import codepot.vendingmachine.domain.Coin;
+import codepot.vendingmachine.domain.CoinBank;
 import codepot.vendingmachine.domain.VendingMachine;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.collect.Sets;
+import dagger.Module;
+import dagger.Provides;
+import org.junit.Before;
 import org.junit.Test;
 
-
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,9 +22,34 @@ public class Story3 {
 
     private static final Coin[] coinBankCoins = new Coin[]{Coin.NICKEL, Coin.NICKEL, Coin.NICKEL};
 
-    private ServiceNotifier outOfMoneyNotifier = mock(ServiceNotifier.class);
+    private static final ServiceNotifier outOfMoneyNotifier = mock(ServiceNotifier.class);
 
-    private VendingMachine vendingMachine; //create vendingMachine with mock notifiers
+    private VendingMachine vendingMachine;
+
+    @Module(
+            overrides = true,
+            library = true
+    )
+    public class VendingMachineTestModule {
+
+        @Provides
+        @Singleton
+        @Named("smsServiceNotifier")
+        ServiceNotifier smsServiceNotifier() {
+            return outOfMoneyNotifier;
+        }
+
+        @Provides
+        @Singleton
+        CoinBank coinBank(@Named("smsServiceNotifier") ServiceNotifier serviceNotifier) {
+            return new CoinBank(serviceNotifier, coinBankCoins);
+        }
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        vendingMachine = new VendingMachine.Builder().build();
+    }
 
     @Test
     public void shouldReturnChange() {
@@ -57,6 +87,7 @@ public class Story3 {
     @Test
     public void shouldNotifyRecipientAboutLackOfMoney() {
         //given
+        VendingMachine vendingMachine = new VendingMachine.Builder().withModule(new VendingMachineTestModule()).build();
         vendingMachine.insertCoin(Coin.QUARTER);
         vendingMachine.insertCoin(Coin.QUARTER);
         vendingMachine.insertCoin(Coin.QUARTER);

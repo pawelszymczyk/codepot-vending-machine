@@ -1,9 +1,19 @@
 digraph G1 {
   concentrate = true;
-  n2 [label="Provider<codepot.vendingmachine.domain.Transaction>"];
-  TransactionFactory -> n2;
-  n3 [label="codepot.vendingmachine.domain.VendingMachine"];
-  n3 -> TransactionFactory;
-  n4 [label="members/codepot.vendingmachine.domain.VendingMachine"];
-  n4 -> TransactionFactory;
+  n2 [label="List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>"];
+  n3 [label="@javax.inject.Named(value=jiraServiceNotifier)/codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier"];
+  n2 -> n3;
+  n4 [label="@javax.inject.Named(value=mailServiceNotifier)/codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier"];
+  n2 -> n4;
+  ProductStorage -> n2;
+  n5 [label="Provider<codepot.vendingmachine.domain.Transaction>"];
+  TransactionFactory -> n5;
+  n6 [label="codepot.vendingmachine.domain.VendingMachine"];
+  n6 -> CoinBank;
+  n6 -> ProductStorage;
+  n6 -> TransactionFactory;
+  n7 [label="members/codepot.vendingmachine.domain.VendingMachine"];
+  n7 -> CoinBank;
+  n7 -> ProductStorage;
+  n7 -> TransactionFactory;
 }

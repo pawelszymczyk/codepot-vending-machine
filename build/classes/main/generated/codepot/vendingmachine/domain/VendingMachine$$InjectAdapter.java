@@ -19,6 +19,8 @@ import javax.inject.Provider;
 public final class VendingMachine$$InjectAdapter extends Binding<VendingMachine>
     implements Provider<VendingMachine> {
   private Binding<TransactionFactory> transactionFactory;
+  private Binding<ProductStorage> productStorage;
+  private Binding<CoinBank> coinBank;
 
   public VendingMachine$$InjectAdapter() {
     super("codepot.vendingmachine.domain.VendingMachine", "members/codepot.vendingmachine.domain.VendingMachine", NOT_SINGLETON, VendingMachine.class);
@@ -32,6 +34,8 @@ public final class VendingMachine$$InjectAdapter extends Binding<VendingMachine>
   @SuppressWarnings("unchecked")
   public void attach(Linker linker) {
     transactionFactory = (Binding<TransactionFactory>) linker.requestBinding("codepot.vendingmachine.domain.TransactionFactory", VendingMachine.class, getClass().getClassLoader());
+    productStorage = (Binding<ProductStorage>) linker.requestBinding("codepot.vendingmachine.domain.ProductStorage", VendingMachine.class, getClass().getClassLoader());
+    coinBank = (Binding<CoinBank>) linker.requestBinding("codepot.vendingmachine.domain.CoinBank", VendingMachine.class, getClass().getClassLoader());
   }
 
   /**
@@ -41,6 +45,8 @@ public final class VendingMachine$$InjectAdapter extends Binding<VendingMachine>
   @Override
   public void getDependencies(Set<Binding<?>> getBindings, Set<Binding<?>> injectMembersBindings) {
     getBindings.add(transactionFactory);
+    getBindings.add(productStorage);
+    getBindings.add(coinBank);
   }
 
   /**
@@ -49,7 +55,7 @@ public final class VendingMachine$$InjectAdapter extends Binding<VendingMachine>
    */
   @Override
   public VendingMachine get() {
-    VendingMachine result = new VendingMachine(transactionFactory.get());
+    VendingMachine result = new VendingMachine(transactionFactory.get(), productStorage.get(), coinBank.get());
     return result;
   }
 

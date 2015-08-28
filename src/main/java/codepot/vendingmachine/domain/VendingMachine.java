@@ -2,10 +2,12 @@ package codepot.vendingmachine.domain;
 
 import codepot.vendingmachine.infrastructure.VendingMachineModule;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
 import dagger.ObjectGraph;
 
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,14 +19,14 @@ public class VendingMachine {
     private Optional<Transaction> currentTransaction = Optional.empty();
 
     private TransactionFactory transactionFactory;
-//    private CoinBank coinBank;
-//    private ProductStorage productStorage;
+    private CoinBank coinBank;
+    private ProductStorage productStorage;
 
     @Inject
-    public VendingMachine(TransactionFactory transactionFactory) {
+    public VendingMachine(TransactionFactory transactionFactory, ProductStorage productStorage, CoinBank coinBank) {
         this.transactionFactory = transactionFactory;
-//        this.coinBank = coinBank;
-//        this.productStorage = productStorage;
+        this.coinBank = coinBank;
+        this.productStorage = productStorage;
     }
 
     public String getDisplay() {
@@ -40,24 +42,24 @@ public class VendingMachine {
     }
 
     public void selectProduct(String productCode) {
-//        currentTransaction.ifPresent(t -> {
-//                    Money productPrice = productStorage.getProductPrice(productCode);
-//
-//                    if (t.getValue().greaterOrEquals(productPrice) && productStorage.isProductAvailable(productCode)) {
-//                        t.reduce(productPrice);
-//                        productsTray.add(productStorage.getProduct(productCode));
-//                        coinReturnTray.addAll(coinBank.change(t));
+        currentTransaction.ifPresent(t -> {
+                    Money productPrice = productStorage.getProductPrice(productCode);
+
+                    if (t.getValue().greaterOrEquals(productPrice) && productStorage.isProductAvailable(productCode)) {
+                        t.reduce(productPrice);
+                        productsTray.add(productStorage.getProduct(productCode));
+                        coinReturnTray.addAll(coinBank.change(t));
         currentTransaction = Optional.empty();
-//                    }
-//                }
-//        );
+                    }
+                }
+        );
     }
 
     public void cancel() {
-//        currentTransaction.ifPresent(t -> {
-//            coinReturnTray.addAll(coinBank.change(t));
-//        });
-//
+        currentTransaction.ifPresent(t -> {
+            coinReturnTray.addAll(coinBank.change(t));
+        });
+
         currentTransaction = Optional.empty();
     }
 
@@ -77,12 +79,16 @@ public class VendingMachine {
     public static class Builder {
 
         ObjectGraph objectGraph;
+        List<Object> modules = Lists.newArrayList();
 
-        public Builder() {
-            objectGraph = ObjectGraph.create(new VendingMachineModule());
+        public Builder withModule(Object module) {
+            modules.add(module);
+            return this;
         }
 
         public VendingMachine build() {
+            modules.add(new VendingMachineModule());
+            objectGraph = ObjectGraph.create(modules.toArray());
             return objectGraph.get(VendingMachine.class);
         }
     }

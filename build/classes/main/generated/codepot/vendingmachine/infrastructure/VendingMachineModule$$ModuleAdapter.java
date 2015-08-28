@@ -35,6 +35,11 @@ public final class VendingMachineModule$$ModuleAdapter extends ModuleAdapter<Ven
   public void getBindings(BindingsGroup bindings, VendingMachineModule module) {
     bindings.contributeProvidesBinding("codepot.vendingmachine.domain.Transaction", new TransactionProvidesAdapter(module));
     bindings.contributeProvidesBinding("codepot.vendingmachine.domain.TransactionFactory", new TransactionFactoryProvidesAdapter(module));
+    bindings.contributeProvidesBinding("@javax.inject.Named(value=jiraServiceNotifier)/codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier", new JiraServiceNotifierProvidesAdapter(module));
+    bindings.contributeProvidesBinding("@javax.inject.Named(value=mailServiceNotifier)/codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier", new MailServiceNotifierProvidesAdapter(module));
+    bindings.contributeProvidesBinding("java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>", new ProductStorageServiceNotifiersProvidesAdapter(module));
+    bindings.contributeProvidesBinding("codepot.vendingmachine.domain.ProductStorage", new ProductStorageProvidesAdapter(module));
+    bindings.contributeProvidesBinding("codepot.vendingmachine.domain.CoinBank", new CoinBankProvidesAdapter(module));
     bindings.contributeProvidesBinding("codepot.vendingmachine.domain.VendingMachine", new VendingMachineProvidesAdapter(module));
   }
 
@@ -116,6 +121,190 @@ public final class VendingMachineModule$$ModuleAdapter extends ModuleAdapter<Ven
   }
 
   /**
+   * A {@code Binding<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>} implementation which satisfies
+   * Dagger's infrastructure requirements including:
+   *
+   * Being a {@code Provider<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>} and handling creation and
+   * preparation of object instances.
+   */
+  public static final class JiraServiceNotifierProvidesAdapter extends ProvidesBinding<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>
+      implements Provider<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier> {
+    private final VendingMachineModule module;
+
+    public JiraServiceNotifierProvidesAdapter(VendingMachineModule module) {
+      super("@javax.inject.Named(value=jiraServiceNotifier)/codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier", IS_SINGLETON, "codepot.vendingmachine.infrastructure.VendingMachineModule", "jiraServiceNotifier");
+      this.module = module;
+      setLibrary(false);
+    }
+
+    /**
+     * Returns the fully provisioned instance satisfying the contract for
+     * {@code Provider<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>}.
+     */
+    @Override
+    public codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier get() {
+      return module.jiraServiceNotifier();
+    }
+  }
+
+  /**
+   * A {@code Binding<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>} implementation which satisfies
+   * Dagger's infrastructure requirements including:
+   *
+   * Being a {@code Provider<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>} and handling creation and
+   * preparation of object instances.
+   */
+  public static final class MailServiceNotifierProvidesAdapter extends ProvidesBinding<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>
+      implements Provider<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier> {
+    private final VendingMachineModule module;
+
+    public MailServiceNotifierProvidesAdapter(VendingMachineModule module) {
+      super("@javax.inject.Named(value=mailServiceNotifier)/codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier", IS_SINGLETON, "codepot.vendingmachine.infrastructure.VendingMachineModule", "mailServiceNotifier");
+      this.module = module;
+      setLibrary(false);
+    }
+
+    /**
+     * Returns the fully provisioned instance satisfying the contract for
+     * {@code Provider<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>}.
+     */
+    @Override
+    public codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier get() {
+      return module.mailServiceNotifier();
+    }
+  }
+
+  /**
+   * A {@code Binding<java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>>} implementation which satisfies
+   * Dagger's infrastructure requirements including:
+   *
+   * Owning the dependency links between {@code java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>} and its
+   * dependencies.
+   *
+   * Being a {@code Provider<java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>>} and handling creation and
+   * preparation of object instances.
+   */
+  public static final class ProductStorageServiceNotifiersProvidesAdapter extends ProvidesBinding<java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>>
+      implements Provider<java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>> {
+    private final VendingMachineModule module;
+    private Binding<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier> jiraServiceNotifier;
+    private Binding<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier> mailServiceNotifier;
+
+    public ProductStorageServiceNotifiersProvidesAdapter(VendingMachineModule module) {
+      super("java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>", IS_SINGLETON, "codepot.vendingmachine.infrastructure.VendingMachineModule", "productStorageServiceNotifiers");
+      this.module = module;
+      setLibrary(false);
+    }
+
+    /**
+     * Used internally to link bindings/providers together at run time
+     * according to their dependency graph.
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void attach(Linker linker) {
+      jiraServiceNotifier = (Binding<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>) linker.requestBinding("@javax.inject.Named(value=jiraServiceNotifier)/codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier", VendingMachineModule.class, getClass().getClassLoader());
+      mailServiceNotifier = (Binding<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>) linker.requestBinding("@javax.inject.Named(value=mailServiceNotifier)/codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier", VendingMachineModule.class, getClass().getClassLoader());
+    }
+
+    /**
+     * Used internally obtain dependency information, such as for cyclical
+     * graph detection.
+     */
+    @Override
+    public void getDependencies(Set<Binding<?>> getBindings, Set<Binding<?>> injectMembersBindings) {
+      getBindings.add(jiraServiceNotifier);
+      getBindings.add(mailServiceNotifier);
+    }
+
+    /**
+     * Returns the fully provisioned instance satisfying the contract for
+     * {@code Provider<java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>>}.
+     */
+    @Override
+    public java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier> get() {
+      return module.productStorageServiceNotifiers(jiraServiceNotifier.get(), mailServiceNotifier.get());
+    }
+  }
+
+  /**
+   * A {@code Binding<codepot.vendingmachine.domain.ProductStorage>} implementation which satisfies
+   * Dagger's infrastructure requirements including:
+   *
+   * Owning the dependency links between {@code codepot.vendingmachine.domain.ProductStorage} and its
+   * dependencies.
+   *
+   * Being a {@code Provider<codepot.vendingmachine.domain.ProductStorage>} and handling creation and
+   * preparation of object instances.
+   */
+  public static final class ProductStorageProvidesAdapter extends ProvidesBinding<codepot.vendingmachine.domain.ProductStorage>
+      implements Provider<codepot.vendingmachine.domain.ProductStorage> {
+    private final VendingMachineModule module;
+    private Binding<java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>> serviceNotifiers;
+
+    public ProductStorageProvidesAdapter(VendingMachineModule module) {
+      super("codepot.vendingmachine.domain.ProductStorage", IS_SINGLETON, "codepot.vendingmachine.infrastructure.VendingMachineModule", "productStorage");
+      this.module = module;
+      setLibrary(false);
+    }
+
+    /**
+     * Used internally to link bindings/providers together at run time
+     * according to their dependency graph.
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void attach(Linker linker) {
+      serviceNotifiers = (Binding<java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>>) linker.requestBinding("java.util.List<codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier>", VendingMachineModule.class, getClass().getClassLoader());
+    }
+
+    /**
+     * Used internally obtain dependency information, such as for cyclical
+     * graph detection.
+     */
+    @Override
+    public void getDependencies(Set<Binding<?>> getBindings, Set<Binding<?>> injectMembersBindings) {
+      getBindings.add(serviceNotifiers);
+    }
+
+    /**
+     * Returns the fully provisioned instance satisfying the contract for
+     * {@code Provider<codepot.vendingmachine.domain.ProductStorage>}.
+     */
+    @Override
+    public codepot.vendingmachine.domain.ProductStorage get() {
+      return module.productStorage(serviceNotifiers.get());
+    }
+  }
+
+  /**
+   * A {@code Binding<codepot.vendingmachine.domain.CoinBank>} implementation which satisfies
+   * Dagger's infrastructure requirements including:
+   *
+   * Being a {@code Provider<codepot.vendingmachine.domain.CoinBank>} and handling creation and
+   * preparation of object instances.
+   */
+  public static final class CoinBankProvidesAdapter extends ProvidesBinding<codepot.vendingmachine.domain.CoinBank>
+      implements Provider<codepot.vendingmachine.domain.CoinBank> {
+    private final VendingMachineModule module;
+
+    public CoinBankProvidesAdapter(VendingMachineModule module) {
+      super("codepot.vendingmachine.domain.CoinBank", IS_SINGLETON, "codepot.vendingmachine.infrastructure.VendingMachineModule", "coinBank");
+      this.module = module;
+      setLibrary(false);
+    }
+
+    /**
+     * Returns the fully provisioned instance satisfying the contract for
+     * {@code Provider<codepot.vendingmachine.domain.CoinBank>}.
+     */
+    @Override
+    public codepot.vendingmachine.domain.CoinBank get() {
+      return module.coinBank();
+    }
+  }
+
+  /**
    * A {@code Binding<codepot.vendingmachine.domain.VendingMachine>} implementation which satisfies
    * Dagger's infrastructure requirements including:
    *
@@ -129,6 +318,8 @@ public final class VendingMachineModule$$ModuleAdapter extends ModuleAdapter<Ven
       implements Provider<codepot.vendingmachine.domain.VendingMachine> {
     private final VendingMachineModule module;
     private Binding<codepot.vendingmachine.domain.TransactionFactory> transactionFactory;
+    private Binding<codepot.vendingmachine.domain.ProductStorage> productStorage;
+    private Binding<codepot.vendingmachine.domain.CoinBank> coinBank;
 
     public VendingMachineProvidesAdapter(VendingMachineModule module) {
       super("codepot.vendingmachine.domain.VendingMachine", IS_SINGLETON, "codepot.vendingmachine.infrastructure.VendingMachineModule", "vendingMachine");
@@ -144,6 +335,8 @@ public final class VendingMachineModule$$ModuleAdapter extends ModuleAdapter<Ven
     @SuppressWarnings("unchecked")
     public void attach(Linker linker) {
       transactionFactory = (Binding<codepot.vendingmachine.domain.TransactionFactory>) linker.requestBinding("codepot.vendingmachine.domain.TransactionFactory", VendingMachineModule.class, getClass().getClassLoader());
+      productStorage = (Binding<codepot.vendingmachine.domain.ProductStorage>) linker.requestBinding("codepot.vendingmachine.domain.ProductStorage", VendingMachineModule.class, getClass().getClassLoader());
+      coinBank = (Binding<codepot.vendingmachine.domain.CoinBank>) linker.requestBinding("codepot.vendingmachine.domain.CoinBank", VendingMachineModule.class, getClass().getClassLoader());
     }
 
     /**
@@ -153,6 +346,8 @@ public final class VendingMachineModule$$ModuleAdapter extends ModuleAdapter<Ven
     @Override
     public void getDependencies(Set<Binding<?>> getBindings, Set<Binding<?>> injectMembersBindings) {
       getBindings.add(transactionFactory);
+      getBindings.add(productStorage);
+      getBindings.add(coinBank);
     }
 
     /**
@@ -161,7 +356,7 @@ public final class VendingMachineModule$$ModuleAdapter extends ModuleAdapter<Ven
      */
     @Override
     public codepot.vendingmachine.domain.VendingMachine get() {
-      return module.vendingMachine(transactionFactory.get());
+      return module.vendingMachine(transactionFactory.get(), productStorage.get(), coinBank.get());
     }
   }
 }

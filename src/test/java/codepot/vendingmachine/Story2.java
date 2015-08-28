@@ -6,9 +6,13 @@ import codepot.vendingmachine.domain.Product;
 import codepot.vendingmachine.domain.VendingMachine;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.collect.Lists;
+import dagger.Module;
+import dagger.Provides;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
+import javax.inject.Singleton;
+import java.util.List;
 
 import static org.assertj.core.api.StrictAssertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -16,9 +20,27 @@ import static org.mockito.Mockito.verify;
 
 public class Story2 {
 
-    private Collection<ServiceNotifier> outOfProductNotifiers = Lists.newArrayList(mock(ServiceNotifier.class), mock(ServiceNotifier.class));
+    private List<ServiceNotifier> outOfProductNotifiers = Lists.newArrayList(mock(ServiceNotifier.class), mock(ServiceNotifier.class));
 
-    private VendingMachine vendingMachine; //create vendingMachine with mock notifiers
+    private VendingMachine vendingMachine;
+
+    @Module(
+            overrides = true,
+            library = true
+    )
+    public class VendingMachineTestModule {
+
+        @Provides
+        @Singleton
+        protected List<ServiceNotifier> productStorageServiceNotifiers() {
+            return outOfProductNotifiers;
+        }
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        vendingMachine = new VendingMachine.Builder().withModule(new VendingMachineTestModule()).build();
+    }
 
     @Test
     public void shouldPutSelectedProductOnTray() {

@@ -1,6 +1,7 @@
 package codepot.vendingmachine.infrastructure;
 
 import codepot.vendingmachine.domain.CoinBank;
+import codepot.vendingmachine.domain.DefaultProductStorage;
 import codepot.vendingmachine.domain.ProductStorage;
 import codepot.vendingmachine.domain.Transaction;
 import codepot.vendingmachine.domain.TransactionFactory;
@@ -17,11 +18,18 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.function.Function;
 
 @Module(
         injects = {VendingMachine.class, Transaction.class, TransactionFactory.class}
 )
 public class VendingMachineModule {
+
+    private final Function<List<ServiceNotifier>, ProductStorage> productStorage;
+
+    public VendingMachineModule(Function<List<ServiceNotifier>, ProductStorage> productStorage) {
+        this.productStorage = productStorage;
+    }
 
     @Provides
     Transaction transaction() {
@@ -65,7 +73,11 @@ public class VendingMachineModule {
     @Provides
     @Singleton
     ProductStorage productStorage(List<ServiceNotifier> serviceNotifiers) {
-        return new ProductStorage(serviceNotifiers);
+        if (productStorage == null) {
+            return new DefaultProductStorage(serviceNotifiers);
+        } else {
+            return productStorage.apply(serviceNotifiers);
+        }
     }
 
     @Provides

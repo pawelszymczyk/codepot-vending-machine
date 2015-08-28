@@ -3,6 +3,7 @@ package codepot.vendingmachine.infrastructure.suncorp;
 import codepot.vendingmachine.domain.Money;
 import codepot.vendingmachine.domain.Product;
 import codepot.vendingmachine.domain.ProductNotFoundException;
+import codepot.vendingmachine.domain.ProductStorage;
 import codepot.vendingmachine.infrastructure.notifiers.JiraServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.MailServiceNotifier;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
@@ -11,7 +12,7 @@ import com.google.common.base.Preconditions;
 import java.util.Arrays;
 import java.util.List;
 
-public class SunCorpProductStorage {
+public class SunCorpProductStorage implements ProductStorage {
 
     private final List<ServiceNotifier> serviceNotifiers;
 

@@ -1,6 +1,7 @@
 package codepot.vendingmachine.domain;
 
 import codepot.vendingmachine.infrastructure.VendingMachineModule;
+import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import dagger.ObjectGraph;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 public class VendingMachine {
 
@@ -80,6 +82,7 @@ public class VendingMachine {
 
         ObjectGraph objectGraph;
         List<Object> modules = Lists.newArrayList();
+        private Function<List<ServiceNotifier>, ProductStorage> productStorage;
 
         public Builder withModule(Object module) {
             modules.add(module);
@@ -87,9 +90,15 @@ public class VendingMachine {
         }
 
         public VendingMachine build() {
-            modules.add(new VendingMachineModule());
+            modules.add(new VendingMachineModule(productStorage));
             objectGraph = ObjectGraph.create(modules.toArray());
             return objectGraph.get(VendingMachine.class);
+        }
+
+        public Builder withExternalProductStorage(Function<List<ServiceNotifier>, ProductStorage> productStorage) {
+            this.productStorage = productStorage;
+
+            return this;
         }
     }
 }

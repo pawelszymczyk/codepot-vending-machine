@@ -22,11 +22,6 @@ public final class VendingMachineModule$$ModuleAdapter extends ModuleAdapter<Ven
     super(codepot.vendingmachine.infrastructure.VendingMachineModule.class, INJECTS, STATIC_INJECTIONS, false /*overrides*/, INCLUDES, true /*complete*/, false /*library*/);
   }
 
-  @Override
-  public VendingMachineModule newModule() {
-    return new codepot.vendingmachine.infrastructure.VendingMachineModule();
-  }
-
   /**
    * Used internally obtain dependency information, such as for cyclical
    * graph detection.

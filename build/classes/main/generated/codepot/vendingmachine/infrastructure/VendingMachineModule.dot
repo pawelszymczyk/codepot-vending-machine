@@ -1,0 +1,9 @@
+digraph G1 {
+  concentrate = true;
+  n2 [label="Provider<codepot.vendingmachine.domain.Transaction>"];
+  TransactionFactory -> n2;
+  n3 [label="codepot.vendingmachine.domain.VendingMachine"];
+  n3 -> TransactionFactory;
+  n4 [label="members/codepot.vendingmachine.domain.VendingMachine"];
+  n4 -> TransactionFactory;
+}

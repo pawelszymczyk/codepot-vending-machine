@@ -5,6 +5,9 @@ repositories {
 }
 
 dependencies {
+    compile 'com.squareup.dagger:dagger:1.2.1'
+    compile 'com.squareup.dagger:dagger-compiler:1.2.1'
+
     compile 'com.google.guava:guava:18.0'
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'

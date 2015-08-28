@@ -4,6 +4,7 @@ import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.collect.Lists;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,7 +16,7 @@ public class CoinBank {
     private final List<Coin> coins = new ArrayList<>();
 
     @Inject
-    public CoinBank(ServiceNotifier notifier) {
+    public CoinBank(@Named("smsServiceNotifier") ServiceNotifier notifier) {
         this(notifier,
                 Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY, Coin.PENNY,
                 Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL, Coin.NICKEL,

@@ -1,11 +1,12 @@
 package codepot.vendingmachine;
 
 import codepot.vendingmachine.domain.Coin;
+import codepot.vendingmachine.domain.CoinBank;
 import codepot.vendingmachine.domain.VendingMachine;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.collect.Sets;
+import org.junit.Before;
 import org.junit.Test;
-
 
 import java.math.BigDecimal;
 
@@ -19,7 +20,14 @@ public class Story3 {
 
     private ServiceNotifier outOfMoneyNotifier = mock(ServiceNotifier.class);
 
-    private VendingMachine vendingMachine; //create vendingMachine with mock notifiers
+    private VendingMachine vendingMachine;
+
+    @Before
+    public void setUp() throws Exception {
+        vendingMachine = new VendingMachine.Builder()
+                .withSingletonBinding(outOfMoneyNotifier, ServiceNotifier.class, "smsServiceNotifier")
+                .build();
+    }
 
     @Test
     public void shouldReturnChange() {
@@ -57,6 +65,12 @@ public class Story3 {
     @Test
     public void shouldNotifyRecipientAboutLackOfMoney() {
         //given
+
+        VendingMachine vendingMachine = new VendingMachine.Builder()
+                    .withSingletonBinding(new CoinBank(outOfMoneyNotifier, coinBankCoins), CoinBank.class, CoinBank.class.getSimpleName())
+                    .withSingletonBinding(outOfMoneyNotifier, ServiceNotifier.class, "smsServiceNotifier")
+                    .build();
+
         vendingMachine.insertCoin(Coin.QUARTER);
         vendingMachine.insertCoin(Coin.QUARTER);
         vendingMachine.insertCoin(Coin.QUARTER);

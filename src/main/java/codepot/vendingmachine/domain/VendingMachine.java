@@ -1,6 +1,7 @@
 package codepot.vendingmachine.domain;
 
 import codepot.vendingmachine.infrastructure.VendingMachineBinder;
+import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import org.glassfish.hk2.api.DynamicConfiguration;
@@ -17,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 public class VendingMachine {
 
@@ -27,13 +29,13 @@ public class VendingMachine {
 
     private TransactionFactory transactionFactory;
     private CoinBank coinBank;
-    private ProductStorage productStorage;
+    private ProductStorageSupplier productStorageSupplier;
 
     @Inject
-    public VendingMachine(TransactionFactory transactionFactory, CoinBank coinBank, ProductStorage productStorage) {
+    public VendingMachine(TransactionFactory transactionFactory, CoinBank coinBank, ProductStorageSupplier productStorageSupplier) {
         this.transactionFactory = transactionFactory;
         this.coinBank = coinBank;
-        this.productStorage = productStorage;
+        this.productStorageSupplier = productStorageSupplier;
     }
 
     public String getDisplay() {
@@ -50,11 +52,11 @@ public class VendingMachine {
 
     public void selectProduct(String productCode) {
         currentTransaction.ifPresent(t -> {
-                    Money productPrice = productStorage.getProductPrice(productCode);
+                    Money productPrice = productStorageSupplier.getProductStorage().getProductPrice(productCode);
 
-                    if (t.getValue().greaterOrEquals(productPrice) && productStorage.isProductAvailable(productCode)) {
+                    if (t.getValue().greaterOrEquals(productPrice) && productStorageSupplier.getProductStorage().isProductAvailable(productCode)) {
                         t.reduce(productPrice);
-                        productsTray.add(productStorage.getProduct(productCode));
+                        productsTray.add(productStorageSupplier.getProductStorage().getProduct(productCode));
                         coinReturnTray.addAll(coinBank.change(t));
                         currentTransaction = Optional.empty();
                     }
@@ -87,7 +89,7 @@ public class VendingMachine {
 
         private ServiceLocator locator;
         private List<Binder> binders = Lists.newArrayList();
-
+        private Function<List<ServiceNotifier>, ProductStorage> productStorage;
         public Builder() {
             binders.add(new VendingMachineBinder());
         }
@@ -115,6 +117,14 @@ public class VendingMachine {
         public VendingMachine build() {
             locator = createServiceLocator("asd", binders.toArray(new Binder[binders.size()]));
 
+            if (productStorage != null) {
+                ProductStorageSupplier productStorageSupplier = locator.getService(ProductStorageSupplier.class);
+
+                productStorageSupplier.injectExternalProductStorage(productStorage);
+            }
+
+
+
             return locator.getService(VendingMachine.class);
         }
 
@@ -138,6 +148,12 @@ public class VendingMachine {
                     bind(instance).to(clazz).named(name).ranked(rankHigherThanDefault);
                 }
             });
+            return this;
+        }
+
+        public Builder withExternalProductStorage(Function<List<ServiceNotifier>, ProductStorage> productStorage) {
+            this.productStorage = productStorage;
+
             return this;
         }
     }

@@ -2,7 +2,7 @@ package codepot.vendingmachine.infrastructure;
 
 import codepot.vendingmachine.domain.CoinBank;
 import codepot.vendingmachine.domain.Hk2TransactionFactory;
-import codepot.vendingmachine.domain.ProductStorage;
+import codepot.vendingmachine.domain.ProductStorageSupplier;
 import codepot.vendingmachine.domain.Transaction;
 import codepot.vendingmachine.domain.TransactionFactory;
 import codepot.vendingmachine.domain.VendingMachine;
@@ -26,7 +26,7 @@ public class VendingMachineBinder extends AbstractBinder {
         bind(MailServiceNotifier.class).in(Singleton.class).to(ServiceNotifier.class).named("mailServiceNotifier");
         bind(SmsServiceNotifier.class).in(Singleton.class).to(ServiceNotifier.class).named("smsServiceNotifier");
         bindFactory(ProductStorageNotifiersFactory.class).in(Singleton.class).to(new TypeLiteral<List<ServiceNotifier>>() {});
-        bind(ProductStorage.class).in(Singleton.class).to(ProductStorage.class);
+        bind(ProductStorageSupplier.class).in(Singleton.class).to(ProductStorageSupplier.class);
         bind(CoinBank.class).in(Singleton.class).to(CoinBank.class);
         bind(VendingMachine.class).in(Singleton.class).to(VendingMachine.class);
     }

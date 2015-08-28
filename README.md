@@ -1,3 +1,10 @@
+# Hipster IoC containers review kata
+------------
+
+1. Pobierz projekt
+2. Przełącz się na odpowiedni brach (eg. team01) 
+3. Czytaj historyjki, implementuj, odpalaj testy  
+
 ![vm.png](vm.png)
 
 ## 1.  Wrzuć monetę 

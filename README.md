@@ -1,3 +1,13 @@
+# Hipster IoC containers review kata
+------------
+
+Kata ma na celu zapoznanie się z wybranym przez siebie kontenerem IoC (eg. Guice, PicoContainer, Hk2, Dagger etc.). 
+Ćwiczenia są zaprojektowane tak aby można było sprawdzić api wykorzystanego kontenera.  
+
+1. Pobierz projekt
+2. Przełącz się na odpowiedni brach (eg. team01) 
+3. Czytaj historyjki, implementuj, odpalaj testy  
+
 ![vm.png](vm.png)
 
 ## 1.  Wrzuć monetę 
@@ -53,5 +63,6 @@ Jako serwisant chciałbym mieć log ostatnich akcji w maszynie (wrzucone pienią
 
 Nie chcemy mieszać w naszej domenie i dodawać wywołań loggera w każdej metodzie, spróbuj posłużyć się wzorcem proxy, rozwiązać zadanie w stylu aspektowym.            
 
+---------------------
 
-
+Stories based on: http://github.com/guyroyse/vending-machine-kata

@@ -11,7 +11,7 @@ public class Story4 {
     public void shouldFullyIntegrateWithSunCorpProductStorage() {
         //given
         VendingMachine vendingMachine = null;
-        /*
+        /*                      į
             here integrate VendingMachine with SunCorpProductStorage, try to pick notifiers from container not create them by new eg:
 
             vendingMachine = new VendingMachine.Builder().withExternalProductStorage(

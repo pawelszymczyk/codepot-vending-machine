@@ -1,5 +1,6 @@
 package codepot.vendingmachine.domain;
 
+import codepot.vendingmachine.infrastructure.ServiceLogger;
 import codepot.vendingmachine.infrastructure.VendingMachineBinder;
 import codepot.vendingmachine.infrastructure.notifiers.ServiceNotifier;
 import com.google.common.annotations.VisibleForTesting;
@@ -42,6 +43,7 @@ public class VendingMachine {
         return "Insert coin";
     }
 
+    @ServiceLogger
     public void insertCoin(Coin coin) {
         if (!currentTransaction.isPresent()) {
             currentTransaction = Optional.of(transactionFactory.createTransaction());
@@ -50,6 +52,7 @@ public class VendingMachine {
         currentTransaction.get().add(coin);
     }
 
+    @ServiceLogger
     public void selectProduct(String productCode) {
         currentTransaction.ifPresent(t -> {
                     Money productPrice = productStorageSupplier.getProductStorage().getProductPrice(productCode);
@@ -64,6 +67,7 @@ public class VendingMachine {
         );
     }
 
+    @ServiceLogger
     public void cancel() {
         currentTransaction.ifPresent(t -> {
             coinReturnTray.addAll(coinBank.change(t));
@@ -72,10 +76,12 @@ public class VendingMachine {
         currentTransaction = Optional.empty();
     }
 
+    @ServiceLogger
     public Set<Product> getProductsTray() {
         return productsTray;
     }
 
+    @ServiceLogger
     public Set<Coin> getCoinReturnTray() {
         return coinReturnTray;
     }

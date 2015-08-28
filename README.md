@@ -1,3 +1,5 @@
+![vm.png](vm.png)
+
 ## 1.  Wrzuć monetę 
  
 Automat przyjmuje monety, pierwsza wrzucona moneta rozpoczyna nową transakcję, transakcja zamyka się po wybraniu produktu i wpłaceniu odpowiedniej ilości pieniędzy lub po kliknięciu przycisku anuluj
@@ -11,9 +13,10 @@ Wstrzyknij TransactionFactory do do klasy VendingMachine. Postaraj się aby test
 
 Jeżeli nie chcesz skupiać swojej uwagi na implementowaniu klocków domenowych załączam przykładowe implementacje klas:
 
-* CoinBank https://gist.github.com/pawelszymczyk/ab9b431d3b9e8ea93f72
-* ProductStorage https://gist.github.com/pawelszymczyk/19306dcb8803c514c689
-* VendingMachine https://gist.github.com/pawelszymczyk/6798008f54096dfa87be
+
+* [CoinBank](https://gist.github.com/pawelszymczyk/ab9b431d3b9e8ea93f72)
+* [ProductStorage](https://gist.github.com/pawelszymczyk/19306dcb8803c514c689)
+* [VendingMachine](https://gist.github.com/pawelszymczyk/6798008f54096dfa87be)
 
 
 ## 2. Wybierz produkt

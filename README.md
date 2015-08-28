@@ -60,5 +60,6 @@ Jako serwisant chciałbym mieć log ostatnich akcji w maszynie (wrzucone pienią
 
 Nie chcemy mieszać w naszej domenie i dodawać wywołań loggera w każdej metodzie, spróbuj posłużyć się wzorcem proxy, rozwiązać zadanie w stylu aspektowym.            
 
+---------------------
 
-
+Stories based on: http://github.com/guyroyse/vending-machine-kata

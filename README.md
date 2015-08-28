@@ -1,6 +1,9 @@
 # Hipster IoC containers review kata
 ------------
 
+Kata ma na celu zapoznanie się z wybranym przez siebie kontenerem IoC (eg. Guice, PicoContainer, Hk2, Dagger etc.). 
+Ćwiczenia są zaprojektowane tak aby można było sprawdzić api wykorzystanego kontenera.  
+
 1. Pobierz projekt
 2. Przełącz się na odpowiedni brach (eg. team01) 
 3. Czytaj historyjki, implementuj, odpalaj testy  

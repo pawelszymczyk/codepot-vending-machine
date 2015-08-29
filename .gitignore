@@ -18,3 +18,4 @@ hs_err_pid*
 .idea
 codepot-vending-machine.iml
 .gradle
+build/**/*

@@ -1,4 +1,4 @@
-# Hipster IoC containers review kata
+## Hipster IoC containers review kata
 ------------
 
 Kata ma na celu zapoznanie się z wybranym przez siebie kontenerem IoC (eg. Guice, PicoContainer, Hk2, Dagger etc.). 

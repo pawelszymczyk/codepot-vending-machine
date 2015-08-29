@@ -12,7 +12,7 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 
 public class Story1 {
 
-    VendingMachine vendingMachine; //try to provide this object in some other way than new VendingMachine(...);
+    VendingMachine vendingMachine = new VendingMachine.Builder().build(); //try to provide this object in some other way than new VendingMachine(...);
 
     @Test
     public void shouldCreateVendingMachineWithClosedTransaction() {
@@ -44,6 +44,7 @@ public class Story1 {
 
         //then
         assertThat(vendingMachine.getCurrentTransaction()).isEqualTo(transaction);
+        assertThat(vendingMachine.getCurrentTransaction().isPresent());
     }
 
     @Test

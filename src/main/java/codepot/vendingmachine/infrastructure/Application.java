@@ -2,6 +2,7 @@ package codepot.vendingmachine.infrastructure;
 
 
 import codepot.vendingmachine.domain.VendingMachine;
+import dagger.ObjectGraph;
 
 public class Application {
 
@@ -11,6 +12,7 @@ public class Application {
     }
 
     private static VendingMachine createVendingMachine() {
-        return null;
+        ObjectGraph objectGraph = ObjectGraph.create(new DaggerModule());
+        return objectGraph.get(VendingMachine.class);
     }
 }

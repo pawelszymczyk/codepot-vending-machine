@@ -6,6 +6,8 @@ repositories {
 
 dependencies {
     compile 'com.google.guava:guava:18.0'
+    compile 'com.squareup.dagger:dagger:1.2.2'
+    compile 'com.squareup.dagger:dagger-compiler:1.2.2'
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
     compile group: 'ch.qos.logback', name: 'logback-core', version: '1.1.2'
